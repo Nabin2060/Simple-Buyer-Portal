@@ -33,7 +33,11 @@ npm install
 Set up your environment variables. Copy the example file and update it if necessary:
 ```bash
 cp .env.example .env
-```
+```PORT=5000
+DATABASE_URL="postgresql://postgres:mysecretpassword@localhost:5433/buyer_portal?schema=public"
+JWT_SECRET="supersecretjwtkey@@@@@@@@#$#@!34"
+JWT_REFRESH_SECRET="superrefreshsecretkey#@$%%#@34321"
+FRONTEND_URL="http://localhost:5173"
 
 Push the database schema and seed the initial property data:
 ```bash
@@ -58,7 +62,7 @@ npm install
 Set up your frontend environment variables:
 ```bash
 cp .env.example .env
-```
+```VITE_API_URL=http://localhost:5000/api
 
 Start the frontend development server:
 ```bash
