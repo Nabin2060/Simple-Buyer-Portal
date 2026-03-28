@@ -1,66 +1,85 @@
-# Simple Buyer Portal (Favourites)
+# Simple Buyer Portal
 
-A production-ready full-stack application built with Node.js, Express, TypeScript, Prisma, PostgreSQL, and React.
+A full-stack real estate property portal built with React, Node.js, Express, and PostgreSQL. It allows users to browse properties, view details, and manage their favorite listings.
 
-## 🚀 Overview
-This application allows real-estate buyers to browse property listings and manage their "Favourites". It focuses on secure authentication, clean architecture, and premium user experience.
+## Tech Stack
+- Frontend: React (Vite), Tailwind CSS, React Router
+- Backend: Node.js, Express, TypeScript
+- Database: PostgreSQL, Prisma ORM
+- Security: HTTP-only cookies, JWT rotation (Access + Refresh tokens), Rate Limiting, Morgan Logging
 
-## ✨ Key Features
-- **Secure Authentication**: JWT-based auth implemented with **HTTP-only cookies** (Best practice: prevents XSS-based token theft).
-- **Property Dashboard**: Real-time property listing with status-driven UI.
-- **Favourites System**: Add/Remove properties from a personalized list with instant feedback.
-- **Backend Pagination**: Efficient server-side pagination integrated with Shadcn UI components.
-- **Rich Aesthetics**: Built with Tailwind CSS v4 and Shadcn UI (Radix UI) for a premium feel.
-- **Global Error Handling**: Centralized message management and automatic error toasts via Sonner.
+## Prerequisites
+Before you begin, ensure you have the following installed:
+- Node.js (v18 or higher)
+- PostgreSQL (or Docker to run the database)
 
-## 🛠 Tech Stack
-- **Backend**: Node.js, Express, TypeScript, Prisma ORM, Zod (Validation).
-- **Frontend**: React (Vite), Tailwind CSS v4, Shadcn UI, Sonner, Axios.
-- **Database**: PostgreSQL (via Docker).
-
-## 🏃 Getting Started
-
-### Prerequisites
-- Docker Desktop
-- Node.js (v18+)
-- npm
+## Project Setup
 
 ### 1. Database Setup
-Ensure Docker is running, then start the PostgreSQL container:
+If you are using Docker for the database, you can start it using the provided compose file:
 ```bash
 cd backend
-docker compose up -d
+docker-compose up -d
 ```
+*(If you are using a local PostgreSQL installation, ensure your server is running and create a database named `buyer_portal`.)*
 
-### 2. Backend Initialization
+### 2. Backend Setup
+Open a new terminal and navigate to the backend directory:
 ```bash
 cd backend
 npm install
-npx prisma migrate dev
+```
+
+Set up your environment variables. Copy the example file and update it if necessary:
+```bash
+cp .env.example .env
+```
+
+Push the database schema and seed the initial property data:
+```bash
+npx prisma db push
+npx prisma generate
+npm run seed
+```
+
+Start the backend development server:
+```bash
 npm run dev
 ```
-*The server will run on `http://localhost:5000`.*
+The server will start on `http://localhost:5000`.
 
-### 3. Frontend Initialization
+### 3. Frontend Setup
+Open another terminal and navigate to the frontend directory:
 ```bash
 cd frontend
 npm install
+```
+
+Set up your frontend environment variables:
+```bash
+cp .env.example .env
+```
+
+Start the frontend development server:
+```bash
 npm run dev
 ```
-*The portal will run on `http://localhost:5173` (or check terminal output).*
+The frontend will be available at `http://localhost:5173`.
 
-## 🔄 Example Flow
-1. **Sign Up**: Navigate to `/register` and create an account.
-2. **Login**: Use your credentials on the `/login` page.
-3. **Browse**: Explore the property grid. Use the **Shadcn Pagination** at the bottom to view more items.
-4. **Favourite**: Click the "Heart" icon on any property to add it to your list.
-5. **Filter**: Click "My Favourites" in the dashboard header to see only your liked properties.
-6. **Logout**: Log out securely to clear session cookies.
+## Viewing the Database (Prisma Studio)
+You can easily view and manage your database records (Users, Properties, Favourites) using Prisma Studio, a visual database GUI.
 
-## 🛡 Security Notes
-- **Passwords**: Never stored in plain text; hashed using `bcrypt` (10 rounds).
-- **Auth**: Tokens are stored in **Secure HTTP-only cookies**. This makes the application resistant to common cross-site scripting (XSS) attacks.
-- **Privacy**: All "Favourite" operations are strictly scoped to the authenticated `userId` at the database query level.
+Open a new terminal in the `backend` directory and run:
+```bash
+cd backend
+npx prisma studio
+```
+This will automatically open Prisma Studio in your default web browser (usually at `http://localhost:5555`).
 
-## 📝 Author
-Antigravity AI (Pair-programmed with USER)
+## Core Features
+- User Authentication: Secure login and registration using short-lived access tokens (15m) and refresh tokens (7d).
+- Property Listing: Browse through responsive real estate property cards.
+- Favourites Management: Users can save and unsave properties they like.
+- Soft Delete Pattern: Data is never fully deleted; records are marked with an `isDeleted` flag instead.
+- Audit Logging: All critical backend requests are logged accurately to a local file.
+
