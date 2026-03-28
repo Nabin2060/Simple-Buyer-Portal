@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  password   String
+  name       String
+  role       String     @default("Buyer")
+  favourites Favourite[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  isDeleted  Boolean    @default(false)
+}
+
+model Property {
+  id          String      @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  location    String
+  imageUrl    String?
+  favourites  Favourite[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  isDeleted   Boolean     @default(false)
+}
+
+model Favourite {
+  id         String   @id @default(uuid())
+  userId     String
+  propertyId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  isDeleted  Boolean  @default(false)
+
+  @@unique([userId, propertyId]) // Handled in code (soft un-delete if re-favourited)
+}
